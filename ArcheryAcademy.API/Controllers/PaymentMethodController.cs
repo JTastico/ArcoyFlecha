@@ -42,4 +42,18 @@ public class PaymentMethodController(IMediator mediator, IMapper mapper) : Contr
 
         return CreatedAtAction(nameof(GetById), new { id = resultDto.Id }, resultDto);
     }
+
+    // PUT (Actualizar)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdatePaymentMethod(int id, [FromBody] PaymentMethodUpdateDto dto)
+    {
+        var command = new UpdatePaymentMethodCommand(id, dto);
+        var updatedEntity = await mediator.Send(command);
+
+        if (updatedEntity is null)
+            return NotFound($"PaymentMethod with ID {id} not found.");
+
+        var resultDto = mapper.Map<PaymentMethodReadDto>(updatedEntity);
+        return Ok(resultDto);
+    }
 }

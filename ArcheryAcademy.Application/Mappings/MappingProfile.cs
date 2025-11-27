@@ -49,5 +49,6 @@ public class MappingProfile: Profile
         //PaymentMethod
         CreateMap<PaymentMethod, PaymentMethodReadDto>().ReverseMap();
         CreateMap<PaymentMethodCreateDto, PaymentMethod>().ReverseMap();
+        CreateMap<PaymentMethodUpdateDto, PaymentMethod>().ReverseMap();
     }
 }
