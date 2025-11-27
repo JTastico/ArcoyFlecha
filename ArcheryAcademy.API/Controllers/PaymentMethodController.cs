@@ -56,4 +56,16 @@ public class PaymentMethodController(IMediator mediator, IMapper mapper) : Contr
         var resultDto = mapper.Map<PaymentMethodReadDto>(updatedEntity);
         return Ok(resultDto);
     }
+
+    // DELETE
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await mediator.Send(new DeletePaymentMethodCommand(id));
+
+        if (!result)
+            return NotFound($"PaymentMethod with ID {id} was not found.");
+
+        return NoContent();
+    }
 }
