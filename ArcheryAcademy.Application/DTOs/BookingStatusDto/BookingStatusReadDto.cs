@@ -9,5 +9,4 @@ public class BookingStatusReadDto
     public bool? IsActive { get; set; }
     public int? DisplayOrder { get; set; }
     public DateTime? CreatedAt { get; set; }
-    public int BookingCount { get; set; }
 }

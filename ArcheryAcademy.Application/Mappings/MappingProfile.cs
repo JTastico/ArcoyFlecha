@@ -3,6 +3,7 @@ using ArcheryAcademy.Application.Dtos.PlanDto;
 using ArcheryAcademy.Application.DTOs.RolDto;
 using ArcheryAcademy.Application.DTOs.UserPlanDto;
 using ArcheryAcademy.Application.DTOs.ScheduleDto;
+using ArcheryAcademy.Application.DTOs.BookingStatusDto;
 using ArcheryAcademy.Domain.Entities;
 using AutoMapper;
 
@@ -38,5 +39,8 @@ public class MappingProfile: Profile
         CreateMap<Role, RolCreateDto>().ReverseMap();
         CreateMap<Role, RolUpdateDto>().ReverseMap();
         CreateMap<Role, RolUpdateDto>().ReverseMap();
+
+        //BookingStatus
+        CreateMap<BookingStatus, BookingStatusReadDto>().ReverseMap();
     }
 }
