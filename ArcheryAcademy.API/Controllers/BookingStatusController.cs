@@ -56,4 +56,16 @@ public class BookingStatusController(IMediator mediator, IMapper mapper) : Contr
         var resultDto = mapper.Map<BookingStatusReadDto>(updatedEntity);
         return Ok(resultDto);
     }
+
+    // DELETE
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await mediator.Send(new DeleteBookingStatusCommand(id));
+
+        if (!result)
+            return NotFound($"BookingStatus with ID {id} was not found.");
+
+        return NoContent();
+    }
 }
