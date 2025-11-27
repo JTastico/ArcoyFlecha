@@ -43,5 +43,6 @@ public class MappingProfile: Profile
         //BookingStatus
         CreateMap<BookingStatus, BookingStatusReadDto>().ReverseMap();
         CreateMap<BookingStatusCreateDto, BookingStatus>().ReverseMap();
+        CreateMap<BookingStatusUpdateDto, BookingStatus>().ReverseMap();
     }
 }

@@ -42,4 +42,18 @@ public class BookingStatusController(IMediator mediator, IMapper mapper) : Contr
 
         return CreatedAtAction(nameof(GetById), new { id = resultDto.Id }, resultDto);
     }
+
+    // PUT (Actualizar)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] BookingStatusUpdateDto dto)
+    {
+        var command = new UpdateBookingStatusCommand(id, dto);
+        var updatedEntity = await mediator.Send(command);
+
+        if (updatedEntity is null)
+            return NotFound($"BookingStatus with ID {id} not found.");
+
+        var resultDto = mapper.Map<BookingStatusReadDto>(updatedEntity);
+        return Ok(resultDto);
+    }
 }
