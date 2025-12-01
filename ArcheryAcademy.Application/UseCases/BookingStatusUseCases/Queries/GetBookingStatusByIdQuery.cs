@@ -13,7 +13,9 @@ internal sealed class GetBookingStatusByIdQueryHandler(IUnitOfWork unitOfWork, I
 {
     public async Task<BookingStatusReadDto?> Handle(GetBookingStatusByIdQuery request, CancellationToken cancellationToken)
     {
-        var bookingStatus = await unitOfWork.Repository<BookingStatus>().GetByIdAsync(request.Id);
+        var bookingStatus = await unitOfWork.Repository<BookingStatus>()
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        
         return bookingStatus == null ? null : mapper.Map<BookingStatusReadDto>(bookingStatus);
     }
 }
