@@ -1,6 +1,7 @@
 using ArcheryAcademy.Application.Dtos.PaymentDto;
 using ArcheryAcademy.Application.UseCases.PaymentUseCase.Queries;
 using ArcheryAcademy.Application.UseCases.PaymentUseCases.Command;
+using ArcheryAcademy.Application.UseCases.PaymentUseCases.Queries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -74,5 +75,16 @@ public class PaymentController(IMediator mediator, IMapper mapper) : ControllerB
             return NotFound($"Payment with ID {id} was not found.");
 
         return NoContent(); // 204 No Content para eliminaciones exitosas
+    }
+    
+    // GET: api/payment/report
+    [HttpGet("report")]
+    public async Task<IActionResult> GetReport([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+    {
+        var query = new GetPaymentReportQuery(startDate, endDate);
+
+        var fileResult = await mediator.Send(query);
+
+        return File(fileResult.FileContent, fileResult.ContentType, fileResult.FileName);
     }
 }
