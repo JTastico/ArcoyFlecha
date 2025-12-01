@@ -65,4 +65,18 @@ public class ScheduleController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    // GET: api/schedule/{id}/report
+    [HttpGet("{id:guid}/report")]
+    public async Task<IActionResult> GetReport(Guid id)
+    {
+
+        var query = new GetScheduleReportQuery(id);
+        var fileResult = await mediator.Send(query);
+
+        if (fileResult == null)
+            return NotFound(new { message = $"Schedule with ID {id} not found." });
+
+        return File(fileResult.FileContent, fileResult.ContentType, fileResult.FileName);
+    }
 }
