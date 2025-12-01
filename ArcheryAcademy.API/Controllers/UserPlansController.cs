@@ -65,5 +65,15 @@ public class UserPlansController(IMediator mediator) : ControllerBase
 
         return NoContent();
     }
+    
+    // GET: api/UserPlans/report?daysThreshold=7
+    [HttpGet("report")]
+    public async Task<IActionResult> GetReport([FromQuery] int daysThreshold = 7)
+    {
+        var query = new GetUserPlanReportQuery(daysThreshold);
+        var fileResult = await mediator.Send(query);
+
+        return File(fileResult.FileContent, fileResult.ContentType, fileResult.FileName);
+    }
 
 }
