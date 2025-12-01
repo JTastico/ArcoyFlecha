@@ -58,4 +58,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.Remove(entity);
         return Task.CompletedTask;
     }
+
+    public async Task<IEnumerable<T>> FindWithIncludesAsync(Expression<Func<T, bool>> predicate, params string[] includes)
+    {
+        IQueryable<T> query = _dbSet;
+
+        // Agregamos cada relación solicitada (ej: "Booking", "User")
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+
+        // Filtramos y ejecutamos
+        return await query.Where(predicate).ToListAsync();
+    }
 }
