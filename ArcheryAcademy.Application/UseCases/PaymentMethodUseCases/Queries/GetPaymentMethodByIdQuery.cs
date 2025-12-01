@@ -13,7 +13,8 @@ internal sealed class GetPaymentMethodByIdQueryHandler(IUnitOfWork unitOfWork, I
 {
     public async Task<PaymentMethodReadDto?> Handle(GetPaymentMethodByIdQuery request, CancellationToken cancellationToken)
     {
-        var paymentMethod = await unitOfWork.Repository<PaymentMethod>().GetByIdAsync(request.Id);
+        var paymentMethod = await unitOfWork.Repository<PaymentMethod>()
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         return paymentMethod == null ? null : mapper.Map<PaymentMethodReadDto>(paymentMethod);
     }
 }
