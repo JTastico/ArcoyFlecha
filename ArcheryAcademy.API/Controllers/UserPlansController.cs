@@ -84,4 +84,18 @@ public class UserPlansController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(query);
         return Ok(result);
     }
+    
+    // PATCH: api/UserPlans/{id}/cancel
+    [HttpPatch("{id:guid}/cancel")]
+    public async Task<IActionResult> CancelUserPlan(Guid id)
+    {
+        var command = new CancelUserPlanCommand(id);
+        var result = await mediator.Send(command);
+
+        if (!result)
+            return NotFound(new { message = $"No se encontró el plan de usuario con ID {id}." });
+
+        // Retornamos 204 No Content porque la acción fue exitosa pero no necesitamos devolver datos
+        return NoContent(); 
+    }
 }
