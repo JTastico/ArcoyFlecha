@@ -19,7 +19,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
 
     // GET by id
-    [HttpGet("{id:int}")]
+    [HttpGet("{Guid:int}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await mediator.Send(new GetUserPlanByIdQuery(id));
@@ -39,7 +39,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
 
     //update
-    [HttpPut("{id:int}")]
+    [HttpPut("{Guid:int}")]
     public async Task<IActionResult> UpdateUserPlan(Guid id, [FromBody] UserPlanUpdateDto dto)
     {
         if (id != dto.Id)
@@ -55,7 +55,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
     
     //delete
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{Guid:int}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await mediator.Send(new DeleteUserPlanCommand(id));
@@ -75,5 +75,13 @@ public class UserPlansController(IMediator mediator) : ControllerBase
 
         return File(fileResult.FileContent, fileResult.ContentType, fileResult.FileName);
     }
-
+    
+    // GET: api/UserPlans/history/{userId}
+    [HttpGet("history/{userId:guid}")]
+    public async Task<ActionResult<List<UserPlanReadDto>>> GetHistoryByUserId(Guid userId)
+    {
+        var query = new GetUserPlansHistoryQuery(userId);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
 }

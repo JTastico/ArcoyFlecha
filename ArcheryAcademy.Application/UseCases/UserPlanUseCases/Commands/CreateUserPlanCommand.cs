@@ -14,7 +14,7 @@ internal sealed class CreateUserPlanCommandHandler(IUnitOfWork unitOfWork, IMapp
     public async Task<UserPlanReadDto> Handle(CreateUserPlanCommand request, CancellationToken cancellationToken)
     {
         var dto = request.CreateDto;
-
+        var startDate = dto.StartDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
         // 1. VALIDACIÓN: ¿Ya tiene plan activo? (Usando tu repo específico)
         var hasActive = await unitOfWork.UserPlanRepository.HasActivePlanAsync(dto.UserId);
         if (hasActive)
@@ -33,7 +33,7 @@ internal sealed class CreateUserPlanCommandHandler(IUnitOfWork unitOfWork, IMapp
         {
             UserId = dto.UserId,
             PlanId = dto.PlanId,
-            StartDate = today,
+            StartDate = startDate,
             // Calculamos EndDate: Hoy + Días del plan
             EndDate = today.AddDays(planBase.DurationDays ?? 30),
             // Asignamos clases: Las que diga el plan
