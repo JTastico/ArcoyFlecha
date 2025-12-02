@@ -38,7 +38,7 @@ public class MappingProfile: Profile
         
         //Role
         CreateMap<Role, RolCreateDto>().ReverseMap();
-        CreateMap<Role, RolUpdateDto>().ReverseMap();
+        CreateMap<Role, RolReadDto>().ReverseMap();
         CreateMap<Role, RolUpdateDto>().ReverseMap();
 
         //BookingStatus
