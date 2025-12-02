@@ -13,7 +13,12 @@ var enableSwagger = app.Configuration.GetValue<bool>("EnableSwagger");
 if (app.Environment.IsDevelopment() || enableSwagger)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        // Esta línea hace que Swagger se abra en la raíz (localhost:5283/)
+        options.RoutePrefix = string.Empty; 
+    });
 }
 
 // Routing
