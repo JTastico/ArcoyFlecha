@@ -21,7 +21,9 @@ public static class InfrastructureServicesExtensions
         //Repository Pattern
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserPlanRepository, UserPlanRepository>();
+        
         return services;
     }
 }

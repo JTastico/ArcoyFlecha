@@ -15,7 +15,10 @@ public class MappingProfile: Profile
     public MappingProfile()
     {
         //User_plan
-        CreateMap<UserPlan, UserPlanReadDto>().ReverseMap();
+        CreateMap<UserPlan, UserPlanReadDto>()
+            // Mapeo especial: Sacar el nombre del Plan relacionado (Navegación)
+            .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan != null ? src.Plan.Name : "Plan Desconocido"))
+            .ReverseMap();
         CreateMap<UserPlanCreateDto, UserPlan>().ReverseMap();
         CreateMap<UserPlanUpdateDto, UserPlan>().ReverseMap();
 
