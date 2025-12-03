@@ -87,5 +87,16 @@ public class BookingController(IMediator mediator, IMapper mapper) : ControllerB
         
         return NoContent();
     }
+    
+    // PATCH: api/Bookings/{id}/attendance
+    [HttpPatch("{id:guid}/attendance")]
+    public async Task<IActionResult> RegisterAttendance(Guid id)
+    {
+        var result = await mediator.Send(new RegisterAttendanceCommand(id));
+
+        if (!result) return NotFound("Reserva no encontrada.");
+
+        return NoContent();
+    }
 
 }
