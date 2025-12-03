@@ -18,17 +18,18 @@ internal sealed class LoginCommandHandler(
     public async Task<AuthResponseDto?> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // 1. Buscar usuario por Email
-        var user = await unitOfWork.Repository<User>()
-            .FirstOrDefaultAsync(u => u.Email == request.LoginDto.Email, cancellationToken);
-
+        var users = await unitOfWork.Repository<User>().FindWithIncludesAsync(
+            u => u.Email == request.LoginDto.Email,
+            "UserRoles", "UserRoles.Role" // Traemos la tabla intermedia y el Rol
+        );
+        
+        var user = users.FirstOrDefault();
+        
         if (user == null) return null;
         
+        // Validar contraseña (Hash)
         bool isPasswordValid = passwordHasher.Verify(request.LoginDto.Password, user.PasswordHash);
-
-        if (!isPasswordValid) 
-            return null;
-        
-        
+        if (!isPasswordValid) return null;
 
         // 3. Generar token
         var token = tokenGenerator.GenerateToken(user);

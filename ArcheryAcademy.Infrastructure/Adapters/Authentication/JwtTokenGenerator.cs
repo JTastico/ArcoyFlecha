@@ -5,6 +5,7 @@ using ArcheryAcademy.Domain.Entities;
 using ArcheryAcademy.Domain.Ports.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace ArcheryAcademy.Infrastructure.Adapters.Authentication;
 
@@ -16,12 +17,27 @@ public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerato
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        
+        
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+        
+        if (user.UserRoles != null)
+        {
+            foreach (var userRole in user.UserRoles)
+            {
+                if (userRole.Role != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
+                }
+            }
+        }
 
         var token = new JwtSecurityToken(
             issuer: configuration["JwtSettings:Issuer"],
