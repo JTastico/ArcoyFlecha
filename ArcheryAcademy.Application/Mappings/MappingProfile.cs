@@ -1,3 +1,4 @@
+using ArcheryAcademy.Application.DTOs.BookingDto;
 using ArcheryAcademy.Application.Dtos.PaymentDto;
 using ArcheryAcademy.Application.Dtos.PlanDto;
 using ArcheryAcademy.Application.DTOs.RolDto;
@@ -18,7 +19,8 @@ public class MappingProfile: Profile
         //User_plan
         CreateMap<UserPlan, UserPlanReadDto>()
             // Mapeo especial: Sacar el nombre del Plan relacionado (Navegación)
-            .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan != null ? src.Plan.Name : "Plan Desconocido"))
+            .ForMember(dest => dest.PlanName,
+                opt => opt.MapFrom(src => src.Plan != null ? src.Plan.Name : "Plan Desconocido"))
             .ReverseMap();
         CreateMap<UserPlanCreateDto, UserPlan>().ReverseMap();
         CreateMap<UserPlanUpdateDto, UserPlan>().ReverseMap();
@@ -27,6 +29,26 @@ public class MappingProfile: Profile
         CreateMap<Schedule, ScheduleReadDto>().ReverseMap();
         CreateMap<ScheduleCreateDto, Schedule>().ReverseMap();
         CreateMap<ScheduleUpdateDto, Schedule>().ReverseMap();
+
+        //Plan
+        CreateMap<Plan, PlanReadDto>().ReverseMap();
+        CreateMap<PlanCreateDto, Plan>().ReverseMap();
+        CreateMap<PlanUpdateDto, Plan>().ReverseMap();
+
+        //Role
+        CreateMap<Role, RolCreateDto>().ReverseMap();
+        CreateMap<Role, RolReadDto>().ReverseMap();
+        CreateMap<Role, RolUpdateDto>().ReverseMap();
+
+        //Booking
+        CreateMap<Booking, BookingReadDto>().ReverseMap();
+        CreateMap<BookingCreateDto, Booking>().ReverseMap();
+        CreateMap<BookingUpdateDto, Booking>().ReverseMap();
+
+        //BookingStatus
+        CreateMap<BookingStatus, BookingStatusReadDto>().ReverseMap();
+        CreateMap<BookingStatusCreateDto, BookingStatus>().ReverseMap();
+        CreateMap<BookingStatusUpdateDto, BookingStatus>().ReverseMap();
         
         //Payment
         CreateMap<Payment, PaymentReadDto>()
@@ -34,21 +56,6 @@ public class MappingProfile: Profile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status != null ? src.Status.Name : null));
         CreateMap<PaymentCreateDto, Payment>().ReverseMap();
         CreateMap<PaymentUpdateDto, Payment>().ReverseMap();
-        
-        //Plan
-        CreateMap<Plan, PlanReadDto>().ReverseMap();
-        CreateMap<PlanCreateDto, Plan>().ReverseMap();
-        CreateMap<PlanUpdateDto, Plan>().ReverseMap();
-        
-        //Role
-        CreateMap<Role, RolCreateDto>().ReverseMap();
-        CreateMap<Role, RolReadDto>().ReverseMap();
-        CreateMap<Role, RolUpdateDto>().ReverseMap();
-
-        //BookingStatus
-        CreateMap<BookingStatus, BookingStatusReadDto>().ReverseMap();
-        CreateMap<BookingStatusCreateDto, BookingStatus>().ReverseMap();
-        CreateMap<BookingStatusUpdateDto, BookingStatus>().ReverseMap();
 
         //PaymentMethod
         CreateMap<PaymentMethod, PaymentMethodReadDto>().ReverseMap();
