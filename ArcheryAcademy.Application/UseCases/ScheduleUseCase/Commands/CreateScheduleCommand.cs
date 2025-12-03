@@ -6,25 +6,48 @@ using MediatR;
 
 namespace ArcheryAcademy.Application.UseCases.ScheduleUseCase.Commands;
 
-public record CreateScheduleCommand(ScheduleCreateDto ScheduleDto) : IRequest<Schedule>;
+public record CreateScheduleCommand(ScheduleCreateDto ScheduleDto) 
+    : IRequest<ScheduleReadDto>;
 
 internal sealed class CreateScheduleCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<CreateScheduleCommand, Schedule>
+    : IRequestHandler<CreateScheduleCommand, ScheduleReadDto>
 {
-    public async Task<Schedule> Handle(CreateScheduleCommand request, CancellationToken cancellationToken)
+    public async Task<ScheduleReadDto> Handle(CreateScheduleCommand request, CancellationToken cancellationToken)
     {
-        // Validar que el instructor existe
-        var instructorExists = await unitOfWork.Repository<User>()
-            .GetByIdAsync(request.ScheduleDto.InstructorId);
+        var dto = request.ScheduleDto;
         
-        if (instructorExists == null)
+        // 1️ VALIDACIÓN: Horario coherente
+        if (dto.StartTime >= dto.EndTime)
+            throw new ArgumentException("La hora de inicio debe ser anterior a la hora fin.");
+        
+        // 2️ VALIDACIÓN: Solapamientos del instructor
+        var hasOverlap = await unitOfWork.ScheduleRepository
+            .HasOverlapAsync(dto.InstructorId, dto.StartTime, dto.EndTime);
+
+        if (hasOverlap)
+            throw new InvalidOperationException(
+                "El instructor ya tiene una clase programada en ese rango de horario."
+            );
+        
+        // 3️ VALIDACIÓN: Instructor existente
+        // (opcional pero recomendado, depende si HasOverlap ya valida existencia)
+        var instructor = await unitOfWork.Repository<User>()
+            .GetByIdAsync(dto.InstructorId);
+
+        if (instructor == null)
         {
             throw new KeyNotFoundException(
-                $"Instructor with ID {request.ScheduleDto.InstructorId} not found.");
+                $"Instructor with ID {dto.InstructorId} not found."
+            );
         }
-        var schedule = mapper.Map<Schedule>(request.ScheduleDto);
-        await unitOfWork.Repository<Schedule>().Insert(schedule);
+
+        // 4️ CREACIÓN de entidad Schedule
+        var schedule = mapper.Map<Schedule>(dto);
+        schedule.IsActive = true;
+        await unitOfWork.ScheduleRepository.Insert(schedule); // Repo específico
         await unitOfWork.CompleteAsync(cancellationToken);
-        return schedule;
+
+        // RETORNAMOS EL DTO COMPLETO
+        return mapper.Map<ScheduleReadDto>(schedule);
     }
 }

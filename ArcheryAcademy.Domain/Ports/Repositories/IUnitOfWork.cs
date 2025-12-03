@@ -5,5 +5,6 @@ public interface IUnitOfWork: IDisposable
     IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class;
     IUserRepository UserRepository { get; }
     IUserPlanRepository UserPlanRepository { get; }
+    IScheduleRepository ScheduleRepository { get; }
     Task<int> CompleteAsync( CancellationToken cancellationToken = default);
 }

@@ -30,11 +30,7 @@ public class MappingProfile: Profile
         CreateMap<UserRole, UserRoleReadDto>().ReverseMap();
         CreateMap<UserRoleCreateDto, UserRole>().ReverseMap();
         CreateMap<UserRoleUpdateDto, UserRole>().ReverseMap();  
-
-        //Schedule
-        CreateMap<Schedule, ScheduleReadDto>().ReverseMap();
-        CreateMap<ScheduleCreateDto, Schedule>().ReverseMap();
-        CreateMap<ScheduleUpdateDto, Schedule>().ReverseMap();
+        
 
         //Plan
         CreateMap<Plan, PlanReadDto>().ReverseMap();

@@ -9,9 +9,10 @@ public class UnitOfWork: IUnitOfWork
     private readonly ArcheryAcademyDbContext  _context;
     private Hashtable? _repositories;
     
-    //Repositorios especificos
-    private IUserRepository? _userRepository;
+   //Repositorios especificos
+   private IUserRepository? _userRepository;
    private IUserPlanRepository? _userPlanRepository;
+   private IScheduleRepository? _scheduleRepository;
     public UnitOfWork(ArcheryAcademyDbContext  context)
     {
         _context = context;
@@ -22,7 +23,8 @@ public class UnitOfWork: IUnitOfWork
         _userRepository ??= new UserRepository(_context);
     public IUserPlanRepository UserPlanRepository =>
         _userPlanRepository ??= new UserPlanRepository(_context);
-    
+    public IScheduleRepository ScheduleRepository =>
+        _scheduleRepository ??= new ScheduleRepository(_context);
     public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
     {
         // Si es la primera vez, inicializamos el diccionario
