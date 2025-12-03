@@ -14,6 +14,7 @@ public class UnitOfWork: IUnitOfWork
    private IUserPlanRepository? _userPlanRepository;
    private IScheduleRepository? _scheduleRepository;
    private IBookingRepository? _bookingRepository;
+   private IReportRepository? _reportRepository;
     public UnitOfWork(ArcheryAcademyDbContext  context)
     {
         _context = context;
@@ -28,7 +29,8 @@ public class UnitOfWork: IUnitOfWork
         _scheduleRepository ??= new ScheduleRepository(_context);
     public IBookingRepository BookingRepository =>
         _bookingRepository ??= new BookingRepository(_context);
-    
+    public IReportRepository ReportRepository =>
+        _reportRepository ??= new ReportRepository(_context);
     public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
     {
         // Si es la primera vez, inicializamos el diccionario
