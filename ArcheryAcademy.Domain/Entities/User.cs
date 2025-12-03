@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ArcheryAcademy.Domain.Entities;
+﻿namespace ArcheryAcademy.Domain.Entities;
 
 public partial class User
 {

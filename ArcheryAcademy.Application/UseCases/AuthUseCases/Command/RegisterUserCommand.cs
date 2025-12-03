@@ -4,7 +4,7 @@ using ArcheryAcademy.Domain.Ports;
 using ArcheryAcademy.Domain.Ports.Authentication;
 using MediatR;
 
-namespace ArcheryAcademy.Application.UseCases.Auth.Command;
+namespace ArcheryAcademy.Application.UseCases.AuthUseCases.Command;
 
 public record RegisterUserCommand(RegisterDto RegisterDto) : IRequest<AuthResponseDto?>;
 

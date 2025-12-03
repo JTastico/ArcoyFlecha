@@ -5,7 +5,6 @@ using ArcheryAcademy.Domain.Entities;
 using ArcheryAcademy.Domain.Ports.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 
 namespace ArcheryAcademy.Infrastructure.Adapters.Authentication;
 
