@@ -10,6 +10,18 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:8080") // URL frontend local - advise use of .env mejorar
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 //Register all services  for extension method
 builder.Services.AddApiServices(builder.Configuration);
 
@@ -50,6 +62,9 @@ if (app.Environment.IsDevelopment() || enableSwagger)
         options.RoutePrefix = string.Empty; 
     });
 }
+
+// Use CORS policy
+app.UseCors("AllowFrontend");
 
 // Routing
 app.UseRouting();
