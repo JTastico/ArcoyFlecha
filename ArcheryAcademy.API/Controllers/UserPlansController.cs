@@ -19,7 +19,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
 
     // GET by id
-    [HttpGet("{Guid:int}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await mediator.Send(new GetUserPlanByIdQuery(id));
@@ -39,7 +39,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
 
     //update
-    [HttpPut("{Guid:int}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateUserPlan(Guid id, [FromBody] UserPlanUpdateDto dto)
     {
         if (id != dto.Id)
@@ -55,7 +55,7 @@ public class UserPlansController(IMediator mediator) : ControllerBase
     }
     
     //delete
-    [HttpDelete("{Guid:int}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await mediator.Send(new DeleteUserPlanCommand(id));
