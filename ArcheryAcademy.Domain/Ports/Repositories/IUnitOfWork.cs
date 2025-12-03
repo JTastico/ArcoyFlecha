@@ -6,5 +6,6 @@ public interface IUnitOfWork: IDisposable
     IUserRepository UserRepository { get; }
     IUserPlanRepository UserPlanRepository { get; }
     IScheduleRepository ScheduleRepository { get; }
+    IBookingRepository BookingRepository { get; }
     Task<int> CompleteAsync( CancellationToken cancellationToken = default);
 }

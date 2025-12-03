@@ -68,4 +68,13 @@ public class BookingController(IMediator mediator, IMapper mapper) : ControllerB
 
         return NoContent();
     }
+    
+    // GET: api/Bookings/history/{userId}
+    [HttpGet("history/{userId:guid}")]
+    public async Task<ActionResult<List<BookingReadDto>>> GetHistory(Guid userId)
+    {
+        var result = await mediator.Send(new GetBookingHistoryQuery(userId));
+        return Ok(result);
+    }
+
 }
