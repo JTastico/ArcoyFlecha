@@ -26,6 +26,7 @@ public static class InfrastructureServicesExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserPlanRepository, UserPlanRepository>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
         
         return services;
     }

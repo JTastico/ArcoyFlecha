@@ -3,6 +3,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ArcheryAcademy.API.Configuration;
 
+
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Register all services  for extension method

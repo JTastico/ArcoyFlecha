@@ -20,4 +20,18 @@ public class AuthController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+    {
+        var command = new RegisterUserCommand(dto);
+        var result = await mediator.Send(command);
+
+        if (result == null)
+        {
+            return BadRequest(new { message = "El correo electrónico ya está registrado." });
+        }
+
+        return Ok(result);
+    }
 }
