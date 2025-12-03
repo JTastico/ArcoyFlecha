@@ -9,7 +9,10 @@ namespace ArcheryAcademy.Application.UseCases.AuthUseCases.Command;
 // El comando recibe el DTO
 public record LoginCommand(LoginDto LoginDto) : IRequest<AuthResponseDto?>;
 
-internal sealed class LoginCommandHandler(IUnitOfWork unitOfWork, IJwtTokenGenerator tokenGenerator)
+internal sealed class LoginCommandHandler(
+    IUnitOfWork unitOfWork, 
+    IJwtTokenGenerator tokenGenerator,
+    IPasswordHasher passwordHasher)
     : IRequestHandler<LoginCommand, AuthResponseDto?>
 {
     public async Task<AuthResponseDto?> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -19,10 +22,13 @@ internal sealed class LoginCommandHandler(IUnitOfWork unitOfWork, IJwtTokenGener
             .FirstOrDefaultAsync(u => u.Email == request.LoginDto.Email, cancellationToken);
 
         if (user == null) return null;
+        
+        bool isPasswordValid = passwordHasher.Verify(request.LoginDto.Password, user.PasswordHash);
 
-        // 2. Validar password (texto plano para el demo)
-        if (user.PasswordHash != request.LoginDto.Password) 
+        if (!isPasswordValid) 
             return null;
+        
+        
 
         // 3. Generar token
         var token = tokenGenerator.GenerateToken(user);
