@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ArcheryAcademy.API.Configuration;
-
+using ArcheryAcademy.Application.Interfaces;
+using ArcheryAcademy.Infrastructure.Services;
 
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -25,7 +26,7 @@ builder.Services.AddCors(options =>
 //Register all services  for extension method
 builder.Services.AddApiServices(builder.Configuration);
 
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
