@@ -23,10 +23,10 @@ public class BookingStatsDto
 
 public class ClassOccupancyDto
 {
-    public string ScheduleInfo { get; set; } = string.Empty; // "Lunes 10:00 - Juan"
+    public string ScheduleInfo { get; set; } = string.Empty; // Ej: "10/10 10:00 - Juan"
     public int MaxCapacity { get; set; }
     public int CurrentBookings { get; set; }
-    public double OccupancyPercentage { get; set; } // Ej: 85.5%
+    public double OccupancyPercentage { get; set; } // Ej: 85.5
 }
 
 public class PlanStatsDto

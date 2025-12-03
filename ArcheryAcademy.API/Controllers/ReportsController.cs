@@ -25,4 +25,20 @@ public class ReportsController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    // GET: api/Reports/classes?from=...&to=...
+    [HttpGet("classes")]
+    public async Task<ActionResult<List<ClassOccupancyDto>>> GetTopClasses(
+        [FromQuery] DateTime? from, 
+        [FromQuery] DateTime? to)
+    {
+        // Usamos la misma lógica de defaults (si es null, usa mes actual)
+        var endDate = to ?? DateTime.UtcNow;
+        var startDate = from ?? new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+        var query = new GetTopClassesQuery(startDate, endDate);
+        var result = await mediator.Send(query);
+
+        return Ok(result);
+    }
 }

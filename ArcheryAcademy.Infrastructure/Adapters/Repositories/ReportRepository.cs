@@ -21,4 +21,23 @@ public class ReportRepository(ArcheryAcademyDbContext context) : IReportReposito
 
         return (totalToday, totalRange, statusCounts);
     }
+    
+    public async Task<List<(string Info, int Max, int Current)>> GetTopClassesRawAsync(DateTime from, DateTime to, int count = 5)
+    {
+        var data = await context.Schedules.AsNoTracking()
+            .Where(s => s.StartTime >= from && s.StartTime <= to)
+            .Select(s => new 
+            {
+                Info = $"{s.StartTime:dd/MM HH:mm} - {s.Instructor.FirstName}",
+                // CORRECCIÓN AQUÍ: Agregamos '?? 0' para convertir int? a int
+                Max = s.MaxStudents ?? 0, 
+                Current = s.Bookings.Count(b => b.StatusId == 1 || b.StatusId == 2)
+            })
+            .OrderByDescending(x => x.Max > 0 ? (double)x.Current / x.Max : 0)
+            .Take(count)
+            .ToListAsync();
+
+        // Ahora x.Max ya es int, por lo que la tupla coincide
+        return data.Select(x => (x.Info, x.Max, x.Current)).ToList();
+    }
 }

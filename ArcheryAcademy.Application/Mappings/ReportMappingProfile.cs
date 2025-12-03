@@ -21,6 +21,15 @@ public class ReportMappingProfile : Profile
             .ForMember(dest => dest.Confirmed, opt => opt.MapFrom(src => src.StatusCounts.GetValueOrDefault(2, 0)))
             .ForMember(dest => dest.Cancelled, opt => opt.MapFrom(src => src.StatusCounts.GetValueOrDefault(3, 0)))
             .ForMember(dest => dest.Completed, opt => opt.MapFrom(src => src.StatusCounts.GetValueOrDefault(4, 0)));
+        
+        CreateMap<(string Info, int Max, int Current), ClassOccupancyDto>()
+            .ForMember(dest => dest.ScheduleInfo, opt => opt.MapFrom(src => src.Info))
+            .ForMember(dest => dest.MaxCapacity, opt => opt.MapFrom(src => src.Max))
+            .ForMember(dest => dest.CurrentBookings, opt => opt.MapFrom(src => src.Current))
+            // Calculamos el porcentaje visual aquí (protegiendo división por cero)
+            .ForMember(dest => dest.OccupancyPercentage, opt => opt.MapFrom(src => 
+                src.Max > 0 ? Math.Round(((double)src.Current / src.Max) * 100, 2) : 0));
+        
     }
     
 }
