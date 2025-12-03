@@ -4,6 +4,8 @@ using ArcheryAcademy.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ArcheryAcademy.Domain.Ports.Authentication;
+using ArcheryAcademy.Infrastructure.Adapters.Authentication;
 
 namespace ArcheryAcademy.Infrastructure.Configuration;
 
@@ -23,6 +25,7 @@ public static class InfrastructureServicesExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserPlanRepository, UserPlanRepository>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         
         return services;
     }

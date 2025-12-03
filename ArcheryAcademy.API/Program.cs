@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using ArcheryAcademy.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +8,29 @@ var builder = WebApplication.CreateBuilder(args);
 //Register all services  for extension method
 builder.Services.AddApiServices(builder.Configuration);
 
+
+
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]!))
+        };
+    });
+
+
+
 var app = builder.Build();
+
 
 // use Swagger
 
@@ -29,8 +54,8 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime
 //app.UseMiddleware<ParameterValidationMiddleware>();
 
 // Autenticación y Autorización
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Controllers
 app.MapControllers();
