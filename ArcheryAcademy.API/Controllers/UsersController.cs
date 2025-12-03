@@ -84,4 +84,17 @@ public class UsersController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    // GET: api/Users/{id}
+    [HttpGet("{id:guid}")] // Importante: Restricción :guid
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var query = new GetUserByIdQuery(id);
+        var result = await mediator.Send(query);
+
+        if (result == null)
+            return NotFound(new { message = $"No se encontró el usuario con ID {id}." });
+
+        return Ok(result);
+    }
 }
