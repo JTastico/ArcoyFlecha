@@ -56,13 +56,10 @@ public class ScheduleController(IMediator mediator) : ControllerBase
     {
         if (id != dto.Id)
             return BadRequest("The ID in the route and the body must match.");
-
         var command = new UpdateScheduleCommand(id, dto);
         var result = await mediator.Send(command);
-
         if (result is null)
             return NotFound($"Schedule with ID {id} not found.");
-
         return Ok(result);
     }
     
@@ -78,5 +75,19 @@ public class ScheduleController(IMediator mediator) : ControllerBase
             return NotFound(new { message = $"Schedule with ID {id} not found." });
 
         return File(fileResult.FileContent, fileResult.ContentType, fileResult.FileName);
+    }
+    // GET: api/schedule/weekly?date=2023-10-25&instructorId=GUID
+    [HttpGet("weekly")]
+    public async Task<ActionResult<List<ScheduleReadDto>>> GetWeeklySchedule(
+        [FromQuery] DateTime? date, 
+        [FromQuery] Guid? instructorId)
+    {
+        // Si el cliente no envía fecha, usamos "Hoy" por defecto
+        var dateRef = date ?? DateTime.UtcNow;
+
+        var query = new GetWeeklyScheduleQuery(dateRef, instructorId);
+        var result = await mediator.Send(query);
+
+        return Ok(result);
     }
 }

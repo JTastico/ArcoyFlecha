@@ -20,5 +20,23 @@ public class ScheduleRepository(ArcheryAcademyDbContext context) : GenericReposi
                 endTime > s.StartTime);
     }
 
-    
+    // 2. CUPOS DISPONIBLES (Eager Loading + Count)
+    public async Task<IEnumerable<Schedule>> GetSchedulesWithOccupancyAsync(DateTime from, DateTime to, Guid? instructorId = null)
+    {
+        var query = _dbSet
+            .AsNoTracking()
+            .Include(s => s.Instructor) // Traemos nombre del instructor
+            // Incluimos las reservas para contar (EF Core optimizará esto si proyectamos)
+            .Include(s => s.Bookings) 
+            .Where(s => s.StartTime >= from && s.EndTime <= to && s.IsActive == true);
+
+        if (instructorId.HasValue)
+        {
+            query = query.Where(s => s.InstructorId == instructorId);
+        }
+
+        return await query
+            .OrderBy(s => s.StartTime)
+            .ToListAsync();
+    }
 }
