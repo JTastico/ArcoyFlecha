@@ -13,6 +13,12 @@ public interface IGenericRepository<T> where T : class
     Task<T> AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
-    
+    Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int page, 
+        int pageSize, 
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        string includeProperties = "" // <--- EL TRUCO: "UserRoles,UserRoles.Role"
+    );
     Task<IEnumerable<T>> FindWithIncludesAsync(Expression<Func<T, bool>> predicate, params string[] includes);
 }

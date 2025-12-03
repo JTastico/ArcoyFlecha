@@ -1,5 +1,7 @@
+using ArcheryAcademy.Application.Common;
 using ArcheryAcademy.Application.DTOs.UserDto;
 using ArcheryAcademy.Application.UseCases.UserUseCases.Command;
+using ArcheryAcademy.Application.UseCases.UserUseCases.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,5 +67,21 @@ public class UsersController(IMediator mediator) : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+    }
+    
+    // GET: api/Users?page=1&pageSize=10
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<UserReadDto>>> GetAll(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 10)
+    {
+        var query = new GetAllUsersQuery 
+        { 
+            Page = page, 
+            PageSize = pageSize 
+        };
+        var result = await mediator.Send(query);
+
+        return Ok(result);
     }
 }

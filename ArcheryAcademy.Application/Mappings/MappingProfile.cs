@@ -7,6 +7,7 @@ using ArcheryAcademy.Application.DTOs.ScheduleDto;
 using ArcheryAcademy.Application.DTOs.BookingStatusDto;
 using ArcheryAcademy.Application.DTOs.PaymentMethodDto;
 using ArcheryAcademy.Application.DTOs.PaymentStatusDto;
+using ArcheryAcademy.Application.DTOs.UserDto;
 using ArcheryAcademy.Application.DTOs.UserRoleDto;
 using ArcheryAcademy.Domain.Entities;
 using AutoMapper;
@@ -68,5 +69,15 @@ public class MappingProfile: Profile
         CreateMap<PaymentStatus, PaymentStatusReadDto>().ReverseMap();
         CreateMap<PaymentStatusCreateDto, PaymentStatus>().ReverseMap();
         CreateMap<PaymentStatusUpdateDto, PaymentStatus>().ReverseMap();
+        
+        //User
+        // Dentro del constructor...
+
+        CreateMap<User, UserReadPgDto>()
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+            // Magia de LINQ para extraer los nombres de los roles
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => 
+                src.UserRoles.Select(ur => ur.Role.Name).ToList()));
+        
     }
 }

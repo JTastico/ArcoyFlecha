@@ -58,7 +58,48 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.Remove(entity);
         return Task.CompletedTask;
     }
+    
+    public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int page, 
+        int pageSize, 
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        string includeProperties = "") // Ejemplo: "Roles,Instructor"
+    {
+        IQueryable<T> query = _dbSet.AsNoTracking();
 
+        // 1. Aplicar Filtro
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        // 2. Aplicar Includes (Relaciones)
+        // Recorremos la cadena separada por comas y aplicamos .Include()
+        foreach (var includeProperty in includeProperties.Split
+                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            query = query.Include(includeProperty);
+        }
+
+        // 3. Contar Total (Antes de paginar)
+        var totalCount = await query.CountAsync();
+
+        // 4. Ordenar
+        if (orderBy != null)
+        {
+            query = orderBy(query);
+        }
+
+        // 5. Paginar
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
+    }
+    
     public async Task<IEnumerable<T>> FindWithIncludesAsync(Expression<Func<T, bool>> predicate, params string[] includes)
     {
         IQueryable<T> query = _dbSet;

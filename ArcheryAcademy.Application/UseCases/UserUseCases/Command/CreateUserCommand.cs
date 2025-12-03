@@ -7,16 +7,16 @@ using MediatR;
 
 namespace ArcheryAcademy.Application.UseCases.UserUseCases.Command;
 
-public record CreateUserCommand(UserCreateDto UserDto) : IRequest<UserReadDto>;
+public record CreateUserCommand(UserCreateDto UserDto) : IRequest<UserReadPgDto>;
 
 internal sealed class CreateUserCommandHandler(
     IUnitOfWork unitOfWork, 
     IMapper mapper, 
     IPasswordHasher passwordHasher
     ) 
-    : IRequestHandler<CreateUserCommand, UserReadDto>
+    : IRequestHandler<CreateUserCommand, UserReadPgDto>
 {
-    public async Task<UserReadDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<UserReadPgDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var dto = request.UserDto;
         // 1. VALIDACIONES PREVIAS
@@ -57,6 +57,6 @@ internal sealed class CreateUserCommandHandler(
         // 6. RESPUESTA
         newUserRole.Role = role; 
         
-        return mapper.Map<UserReadDto>(newUser);
+        return mapper.Map<UserReadPgDto>(newUser);
     }
 }
