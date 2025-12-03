@@ -76,5 +76,16 @@ public class BookingController(IMediator mediator, IMapper mapper) : ControllerB
         var result = await mediator.Send(new GetBookingHistoryQuery(userId));
         return Ok(result);
     }
+    
+    // PATCH: api/Bookings/{id}/cancel
+    [HttpPatch("{id:guid}/cancel")]
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        var result = await mediator.Send(new CancelBookingCommand(id));
+        
+        if (!result) return NotFound("Reserva no encontrada.");
+        
+        return NoContent();
+    }
 
 }
