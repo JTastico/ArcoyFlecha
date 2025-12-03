@@ -9,4 +9,5 @@ public class RegisterDto
     public string? Phone { get; set; }
     // Nuevo campo: "A" o "I" (Default: "A")
     public string Status { get; set; } = "A";
+    public string Role { get; set; } = "Alumno";
 }

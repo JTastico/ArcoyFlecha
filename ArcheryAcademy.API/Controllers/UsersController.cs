@@ -24,15 +24,13 @@ public class UsersController(IMediator mediator) : ControllerBase
             var command = new UpdateUserCommand(id, dto);
             var result = await mediator.Send(command);
 
-            if (!result)
-                return NotFound(new { message = $"Usuario con ID {id} no encontrado." });
+            if (!result) return NotFound(new { message = $"Usuario con ID {id} no encontrado." });
 
             // 204 No Content es el estándar para actualizaciones exitosas
             return NoContent();
         }
         catch (InvalidOperationException ex)
         {
-            // Captura: "El email ya está en uso"
             return BadRequest(new { message = ex.Message });
         }
         catch (KeyNotFoundException ex)

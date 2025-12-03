@@ -21,7 +21,22 @@ internal sealed class RegisterUserCommandHandler(
             .FirstOrDefaultAsync(u => u.Email == request.RegisterDto.Email, cancellationToken);
 
         if (existingUser != null) return null;
+        
+        string roleName = string.IsNullOrWhiteSpace(request.RegisterDto.Role) 
+            ? "Alumno" 
+            : request.RegisterDto.Role;
+        
+        var selectedRole = await unitOfWork.Repository<Role>()
+            .FirstOrDefaultAsync(r => r.Name == roleName, cancellationToken);
+        
 
+        if (selectedRole == null) 
+        {
+            // Opcional: Podrías lanzar una excepción personalizada aquí
+            throw new KeyNotFoundException($"El rol '{roleName}' no existe.");
+        }
+        
+        
         // 2. Obtener Rol por defecto "Alumno"
         var defaultRole = await unitOfWork.Repository<Role>()
             .FirstOrDefaultAsync(r => r.Name == "Alumno", cancellationToken);
