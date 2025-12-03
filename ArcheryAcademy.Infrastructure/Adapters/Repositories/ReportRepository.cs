@@ -40,4 +40,25 @@ public class ReportRepository(ArcheryAcademyDbContext context) : IReportReposito
         // Ahora x.Max ya es int, por lo que la tupla coincide
         return data.Select(x => (x.Info, x.Max, x.Current)).ToList();
     }
+    
+    public async Task<(int Active, int Expired, Dictionary<string, int> ByType)> 
+        GetPlanStatsRawAsync(DateTime from, DateTime to)
+    {
+        var f = DateOnly.FromDateTime(from);
+        var t = DateOnly.FromDateTime(to);
+
+        var query = context.UserPlans
+            .AsNoTracking()
+            .Where(up => up.StartDate >= f && up.StartDate <= t);
+
+        var active = await query.CountAsync(up => up.IsActive == true);
+        var expired = await query.CountAsync(up => up.IsActive == false);
+
+        var byType = await query
+            .GroupBy(up => up.Plan.Name)
+            .Select(g => new { Name = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.Name, x => x.Count);
+
+        return (active, expired, byType);
+    }
 }

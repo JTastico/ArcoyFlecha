@@ -29,6 +29,11 @@ public class ReportMappingProfile : Profile
             // Calculamos el porcentaje visual aquí (protegiendo división por cero)
             .ForMember(dest => dest.OccupancyPercentage, opt => opt.MapFrom(src => 
                 src.Max > 0 ? Math.Round(((double)src.Current / src.Max) * 100, 2) : 0));
+        // Origen: Tupla (Active, Expired, ByType) -> Destino: PlanStatsDto
+        CreateMap<(int Active, int Expired, Dictionary<string, int> ByType), PlanStatsDto>()
+            .ForMember(dest => dest.TotalActive, opt => opt.MapFrom(src => src.Active))
+            .ForMember(dest => dest.TotalExpired, opt => opt.MapFrom(src => src.Expired))
+            .ForMember(dest => dest.ByType, opt => opt.MapFrom(src => src.ByType));
         
     }
     

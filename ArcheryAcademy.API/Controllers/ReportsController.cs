@@ -41,4 +41,20 @@ public class ReportsController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    // GET: api/Reports/plans?from=2023-01-01&to=2023-12-31
+    [HttpGet("plans")]
+    public async Task<ActionResult<PlanStatsDto>> GetPlanStats(
+        [FromQuery] DateTime? from, 
+        [FromQuery] DateTime? to)
+    {
+        // Lógica de fechas por defecto (Si es null, usamos el mes actual)
+        var endDate = to ?? DateTime.UtcNow;
+        var startDate = from ?? new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+        var query = new GetPlanStatsQuery(startDate, endDate);
+        var result = await mediator.Send(query);
+
+        return Ok(result);
+    }
 }

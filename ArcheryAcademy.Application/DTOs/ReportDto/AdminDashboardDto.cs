@@ -33,7 +33,7 @@ public class PlanStatsDto
 {
     public int TotalActive { get; set; }
     public int TotalExpired { get; set; }
-    // Diccionario para: "Básico": 10, "Avanzado": 5
+    // Clave: Nombre del Plan (Ej: "Básico"), Valor: Cantidad
     public Dictionary<string, int> ByType { get; set; } = new(); 
 }
 
