@@ -52,4 +52,18 @@ public class UsersController(IMediator mediator) : ControllerBase
 
         return NoContent();
     }
+    //Craar usuario
+    [HttpPost]
+    public async Task<ActionResult<UserReadDto>> Create([FromBody] UserCreateDto dto)
+    {
+        try
+        {
+            var result = await mediator.Send(new CreateUserCommand(dto));
+            return Ok(result); 
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }
