@@ -57,4 +57,20 @@ public class ReportsController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    // GET: api/Reports/users?from=2025-01-01&to=2025-01-31
+    [HttpGet("users")]
+    public async Task<ActionResult<UserStatsDto>> GetUserStats(
+        [FromQuery] DateTime? from, 
+        [FromQuery] DateTime? to)
+    {
+        // Lógica de fechas por defecto (Si es null, usamos el mes actual)
+        var endDate = to ?? DateTime.UtcNow;
+        var startDate = from ?? new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+        var query = new GetUserStatsQuery(startDate, endDate);
+        var result = await mediator.Send(query);
+
+        return Ok(result);
+    }
 }

@@ -34,7 +34,11 @@ public class ReportMappingProfile : Profile
             .ForMember(dest => dest.TotalActive, opt => opt.MapFrom(src => src.Active))
             .ForMember(dest => dest.TotalExpired, opt => opt.MapFrom(src => src.Expired))
             .ForMember(dest => dest.ByType, opt => opt.MapFrom(src => src.ByType));
-        
+        // Origen: Tupla (Total, New, Active) -> Destino: UserStatsDto
+        CreateMap<(int Total, int New, int Active), UserStatsDto>()
+            .ForMember(dest => dest.TotalUsers, opt => opt.MapFrom(src => src.Total))
+            .ForMember(dest => dest.NewUsersThisMonth, opt => opt.MapFrom(src => src.New))
+            .ForMember(dest => dest.ActiveStudents, opt => opt.MapFrom(src => src.Active));
     }
     
 }

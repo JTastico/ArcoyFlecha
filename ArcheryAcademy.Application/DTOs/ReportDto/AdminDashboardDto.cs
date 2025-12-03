@@ -40,6 +40,6 @@ public class PlanStatsDto
 public class UserStatsDto
 {
     public int TotalUsers { get; set; }
-    public int NewThisMonth { get; set; }
+    public int NewUsersThisMonth { get; set; }
     public int ActiveStudents { get; set; } // Reservaron en los últimos 30 días
 }

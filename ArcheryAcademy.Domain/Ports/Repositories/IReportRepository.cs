@@ -10,4 +10,8 @@ public interface IReportRepository
     // Retorna: Activos, vencidos, conteo agrupado por tipo de plan
     Task<(int Active, int Expired, Dictionary<string, int> ByType)> 
         GetPlanStatsRawAsync(DateTime from, DateTime to);
+    
+    // Retorna: Total usuarios, nuevos en el rango, usuarios activos
+    Task<(int Total, int New, int Active)> 
+        GetUserStatsRawAsync(DateTime from, DateTime to);
 }

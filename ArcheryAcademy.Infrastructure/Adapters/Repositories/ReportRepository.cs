@@ -61,4 +61,22 @@ public class ReportRepository(ArcheryAcademyDbContext context) : IReportReposito
 
         return (active, expired, byType);
     }
+    
+    public async Task<(int Total, int New, int Active)> 
+        GetUserStatsRawAsync(DateTime from, DateTime to)
+    {
+        var total = await context.Users.CountAsync();
+
+        var newUsers = await context.Users
+            .CountAsync(u => u.CreatedAt >= from && u.CreatedAt <= to);
+
+        var active = await context.Bookings
+            .AsNoTracking()
+            .Where(b => b.CreatedAt >= from && b.CreatedAt <= to)
+            .Select(b => b.UserId)
+            .Distinct()
+            .CountAsync();
+
+        return (total, newUsers, active);
+    }
 }
