@@ -1,4 +1,5 @@
 using ArcheryAcademy.Application.DTOs.AuthDto;
+using ArcheryAcademy.Application.UseCases.Auth.Command;
 using ArcheryAcademy.Application.UseCases.AuthUseCases.Command;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

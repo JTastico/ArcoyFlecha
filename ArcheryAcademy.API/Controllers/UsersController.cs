@@ -41,4 +41,17 @@ public class UsersController(IMediator mediator) : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+    
+    
+    [HttpPatch("status")]
+    public async Task<IActionResult> UpdateStatus([FromBody] UserStatusUpdateDto dto)
+    {
+        var command = new UpdateUserStatusCommand(dto);
+        var result = await mediator.Send(command);
+
+        if (!result)
+            return NotFound(new { message = $"No se encontró al usuario '{dto.FirstName} {dto.LastName}'." });
+
+        return NoContent();
+    }
 }

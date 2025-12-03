@@ -17,7 +17,7 @@ public partial class User
 
     public string? Phone { get; set; }
 
-    public bool? IsActive { get; set; }
+    public string Status { get; set; } = "A";
 
     public DateTime? CreatedAt { get; set; }
 

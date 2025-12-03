@@ -316,9 +316,10 @@ public partial class ArcheryAcademyDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("first_name");
             entity.Property(e => e.InstructorId).HasColumnName("instructor_id");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
+            entity.Property(e => e.Status)
+                .HasMaxLength(1)
+                .HasDefaultValue("A")
+                .HasColumnName("status");
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
@@ -328,6 +329,10 @@ public partial class ArcheryAcademyDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
+            entity.Property(e => e.Status)
+                .HasMaxLength(1)
+                .HasDefaultValue("A")
+                .HasColumnName("status");
 
             entity.HasOne(d => d.Instructor).WithMany(p => p.InverseInstructor)
                 .HasForeignKey(d => d.InstructorId)
