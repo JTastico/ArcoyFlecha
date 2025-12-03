@@ -34,6 +34,8 @@ public partial class ArcheryAcademyDbContext : DbContext
     public virtual DbSet<UserPlan> UserPlans { get; set; }
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
+    public virtual DbSet<AppSetting> AppSettings { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -186,6 +188,13 @@ public partial class ArcheryAcademyDbContext : DbContext
                 .HasColumnName("name");
         });
 
+        modelBuilder.Entity<AppSetting>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("app_settings");
+        });
+        
+        
         modelBuilder.Entity<PaymentStatus>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("payment_statuses_pkey");

@@ -48,7 +48,7 @@ public class RoleControler(IMediator mediator, IMapper mapper): ControllerBase
     }
     
     //update
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:guid}")] 
     public async Task<IActionResult> UpdateRol(Guid id, [FromBody] RolUpdateDto dto)
     {
         if (id != dto.Id)
@@ -58,7 +58,7 @@ public class RoleControler(IMediator mediator, IMapper mapper): ControllerBase
         var result = await mediator.Send(command);
 
         if (result is null)
-            return NotFound($"UserPlan with ID {id} not found.");
+            return NotFound($"Role with ID {id} not found.");
 
         return Ok(result);
     }
