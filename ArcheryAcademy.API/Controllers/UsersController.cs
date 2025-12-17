@@ -97,4 +97,13 @@ public class UsersController(IMediator mediator) : ControllerBase
 
         return Ok(result);
     }
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+    
+        await mediator.Send(new DeleteUserCommand(id));
+
+        return Ok(new { message = "Usuario eliminado con éxito." });
+    }
 }
