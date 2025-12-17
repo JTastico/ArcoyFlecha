@@ -73,7 +73,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "Healthy", time = DateTime
 // Middlewares personalizados 
 //app.UseMiddleware<ErrorHandlingMiddleware>();           
 //app.UseMiddleware<ParameterValidationMiddleware>();
-
+app.UseMiddleware<ArcheryAcademy.API.Middlewares.ExceptionMiddleware>();
 // Autenticación y Autorización
 app.UseAuthentication();
 app.UseAuthorization();
